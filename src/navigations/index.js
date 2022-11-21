@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Icon from 'react-native-vector-icons/Feather';
+// import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import routes from '../config/routes';
 import { Colors, Typography } from '../styles';
@@ -14,12 +15,14 @@ import Home from '../screens/home';
 import Transactions from '../screens/transactions';
 import MoneyBox from '../screens/moneybox';
 import Settings from '../screens/settings';
+import Dashboards from '../screens/dashboards';
 import Notifications from '../screens/home/notifications';
 import AddMoneyBox from '../screens/moneybox/add-money-box';
 import AddTransaction from '../screens/transactions/add-transaction';
 import Splash from '../screens/splash';
 import GetStarted from '../screens/auth';
 import Login from '../screens/auth/login';
+import AddQrCodeTransaction from '../screens/transactions/add-qrcode-transaction';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -61,6 +64,15 @@ function MyTabs() {
                         ),
                     }} />
             <Tab.Screen 
+                name={routes.Dashboards} 
+                component={Dashboards}
+                options={{
+                    tabBarLabel: <Text style={[Typography.TAGLINE, {color: Colors.WHITE}]}>{routes.Dashboards}</Text>,
+                    tabBarIcon: ({ color }) => (
+                    <Icon name="bar-chart" color={color} size={23} />
+                    ),
+                }} />
+            <Tab.Screen 
                 name={routes.Settings} 
                 component={Settings}
                 options={{
@@ -93,7 +105,8 @@ const RootNavigator = () => {
               <>
                 <Stack.Screen name='MyTabs' component={MyTabs} />
                 <Stack.Screen name={routes.Notifications} component={Notifications} />
-                <Stack.Screen name={routes.AddTransaction} component={AddTransaction} />
+                <Stack.Screen name={routes.AddManualTransaction} component={AddTransaction} />
+                <Stack.Screen name={routes.AddQrCodeTransaction} component={AddQrCodeTransaction} />
                 <Stack.Screen name={routes.AddMoneyBox} component={AddMoneyBox} />
               </>
             }

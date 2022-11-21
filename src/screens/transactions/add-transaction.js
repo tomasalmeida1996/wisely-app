@@ -19,16 +19,18 @@ import { categories } from '../../utils/categories';
 import BackHeader from '../../components/Headers/BackHeader';
 import Button from '../../components/Button';
 
-const AddTransaction = ({navigation, route}) => {
+const AddTransaction = ({navigation, route, item}) => {
     const [category, setCategory] = useState();
     const [income, setIncome] = useState(false);
     const [showDate, setShowDate] = useState(false);
-    const [date, setDate] = useState(new Date());
-    const [amount, setAmount] = useState('');
+    const [date, setDate] = useState(item?.date ? new Date(item?.date) : new Date());
+    const [amount, setAmount] = useState(item?.amount ? item?.amount : '');
 
     useEffect(() => {
+        console.log("toute item",route.params?.item)
         if (route.params?.item) {
-            setCategory({name: route.params.item.category, icon: route.params.item.icon});
+            const category = !!route.params.item.category ? {name: route.params.item.category, icon: route.params.item.icon} : categories[0]
+            setCategory(category);
             setDate(new Date(route.params.item.transaction_date));
             setAmount((route.params.item.amount).toString());
             setIncome(route.params.item.type == 'income' ? false : true);
@@ -51,6 +53,13 @@ const AddTransaction = ({navigation, route}) => {
     // Insert Transaction
     const __insert = () => {
         const stringDate = date.toLocaleDateString();
+        console.log("add transaction",{
+            category: category.name,
+            icon: category.icon,
+            date: stringDate,
+            amount: parseFloat(amount),
+            type: income ? 'expense' : 'income'
+        })
         insertTransaction({
             category: category.name,
             icon: category.icon,
@@ -75,7 +84,7 @@ const AddTransaction = ({navigation, route}) => {
 
     // Save Transaction
     const __save = () => {
-        if (route.params?.item) {
+        if (route.params?.item.operation === 'edit') {
             __update();
         }
         else {
@@ -87,7 +96,7 @@ const AddTransaction = ({navigation, route}) => {
     return (
         <View style={styles.container}>
             {/* Header */}
-            <BackHeader title={route.params?.item ? 'Edit Transaction' : 'New Transaction'} />
+            <BackHeader title={route.params?.item.operation === 'edit' ? 'Edit Transaction' : 'New Transaction'} />
 
             {/* Body */}
             <ScrollView style={styles.bodyContainer} showsVerticalScrollIndicator={false}>

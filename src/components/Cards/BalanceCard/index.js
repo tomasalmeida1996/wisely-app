@@ -16,14 +16,14 @@ const BalanceCard = (props) => {
         <View style={styles.container}>
             <View style={styles.blockContainer}>
                 <Text style={[Typography.TAGLINE, {color: Colors.GRAY_THIN, marginBottom: 10}]}>My Balance</Text>
-                <Text style={[Typography.H1, {color: Colors.WHITE}]}>{props.currency} {balance}</Text>
+                <Text style={[Typography.H1, {color: Colors.WHITE}]}>{props.currency} {balance.toFixed(2)}</Text>
             </View>
 
             <View style={styles.barContainer}></View>
 
             <View style={styles.blockContainer}>
                 <Text style={[Typography.TAGLINE, {color: Colors.GRAY_THIN, marginBottom: 10}]}>Total Payout</Text>
-                <Text style={[Typography.H1, {color: Colors.WHITE}]}>{props.currency} {expenses}</Text>
+                <Text style={[Typography.H1, {color: Colors.WHITE}]}>{props.currency} {expenses.toFixed(2)}</Text>
             </View>
         </View>
     );

@@ -15,6 +15,7 @@ import AuthContext from '../../context/AuthContext';
 
 import Bar from '../../components/Bar';
 import { currencies, getCurrency, storeCurrency } from '../../utils/currency';
+import { backupDB, restoreDB, shareDB } from "../../utils/database";
 
 const Settings = ({navigation}) => {
     const {state, authContext} = React.useContext(AuthContext);
@@ -129,7 +130,22 @@ const Settings = ({navigation}) => {
                             </Pressable>
                         </View>
                     </View>
-
+                    {/* Backup DB */}
+                    <TouchableOpacity 
+                        activeOpacity={0.5}
+                        style={styles.btnContainer}
+                        onPress={() => restoreDB()} >
+                            <Text style={[Typography.H3, {color: Colors.ALERT}]}>Restore data</Text>
+                    </TouchableOpacity>
+                    
+                    {/* Backup DB */}
+                    <TouchableOpacity 
+                        activeOpacity={0.5}
+                        style={styles.btnContainer}
+                        onPress={() => shareDB()} >
+                            <Text style={[Typography.H3, {color: Colors.ALERT}]}>Backup data</Text>
+                    </TouchableOpacity>
+                    
                     {/* Sign out */}
                     <TouchableOpacity 
                         activeOpacity={0.5}

@@ -25,7 +25,9 @@ export const createTransactionsTable = () => {
     db.transaction((tx) => {
         tx.executeSql(
             'CREATE TABLE IF NOT EXISTS ' + tableName +
-            ' (id INTEGER PRIMARY KEY AUTOINCREMENT, category VARCHAR(50) NOT NULL, icon VARCHAR(30) NOT NULL, transaction_date TEXT NOT NULL, amount FLOAT NOT NULL, type VARCHAR(20) NOT NULL);',
+            ' (id INTEGER PRIMARY KEY AUTOINCREMENT, category VARCHAR(50) NOT NULL, icon VARCHAR(30) NOT NULL, value_date TEXT NOT NULL, transaction_date TEXT NOT NULL, description VARCHAR(300) NULL, amount FLOAT NOT NULL, type VARCHAR(20) NOT NULL, id_qrcode_read integer NULL, id_imported_file integer NULL, ' +
+            ' insert_date TEXT DEFAULT CURRENT_DATE NOT NULL, ' +
+            ' isArchived INTEGER DEFAULT 0 NULL);',
             [],
             () => {
                 console.log('created');
@@ -54,6 +56,7 @@ export const getTransactions = (setTransactions) => {
                             id: row.id,
                             category: row.category,
                             icon: row.icon,
+                            description: row.description,
                             transaction_date: row.transaction_date,
                             amount: row.amount,
                             type: row.type
@@ -89,6 +92,7 @@ export const getIncomes = (setIncomes) => {
                             id: row.id,
                             category: row.category,
                             icon: row.icon,
+                            description: row.description,
                             transaction_date: row.transaction_date,
                             amount: row.amount,
                             type: row.type
@@ -124,6 +128,7 @@ export const getExpenses = (setExpenses) => {
                             id: row.id,
                             category: row.category,
                             icon: row.icon,
+                            description: row.description,
                             transaction_date: row.transaction_date,
                             amount: row.amount,
                             type: row.type
@@ -206,10 +211,42 @@ export const insertTransaction = (item) => {
     else {
         db.transaction((tx) => {
             tx.executeSql(
-                'INSERT INTO ' + tableName + '(category, icon, transaction_date, amount, type) VALUES(?,?,?,?,?);',
-                [item.category, item.icon, item.date, item.amount, item.type],
+                'INSERT INTO ' + tableName + '(category, icon, value_date, transaction_date, description, amount, type, id_imported_file) VALUES(?,?,?,?,?,?,?,?);',
+                [item.category, item.icon, item.value_date, item.date, item.description, item.amount, item.type, item.id_imported_file],
                 () => {
                     console.log('inserted');
+                },
+                error => {
+                    console.log(error);
+                }
+            );
+        });
+    }
+}
+
+// Insert transactions by file
+export const insertMultipleTransactions = (_items,onSuccess) => {
+    const items = _items //[_items[0]]
+    const format = ['category','transaction_date', 'amount', 'type']
+    if (items.length < 1) {
+        Alert.alert('Oups !', 'No data.')
+    }
+    else {
+        // const values = 'VALUES(?,?,?,?,?);'
+        const values = items.map( item => {
+            return ` ('${item.category || ''}','${item.icon || ''}','${item.transaction_date}',${item.amount},'${item.type}','${item.description}','${item.value_date}',${item.id_imported_file})`
+        })
+        const finalValues = values.join(',')
+        const sql = 'INSERT INTO ' + tableName + ' (category, icon, transaction_date, amount, type,description,value_date,id_imported_file) VALUES' + finalValues + ';';
+        // console.log("insertMultipleTransactions",values)
+        console.log("insertMultipleTransactions",sql)
+        db.transaction((tx,results) => {
+            tx.executeSql(
+                sql,
+                [],
+                () => {
+                    console.log('inserted',results);
+                    onSuccess && onSuccess (results)
                 },
                 error => {
                     console.log(error);

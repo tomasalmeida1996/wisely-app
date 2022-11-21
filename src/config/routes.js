@@ -10,10 +10,14 @@ const routes = {
   Transactions: 'Transactions',
   Income: 'Income',
   Expense: 'Expense',
-  AddTransaction: 'AddTransaction',
+  // AddTransaction: 'AddTransaction',
+  AddManualTransaction: 'AddManualTransaction',
+  AddQrCodeTransaction: 'AddQrCodeTransaction',
   // MoneyBox
   MoneyBox: 'MoneyBox',
   AddMoneyBox: 'AddMoneyBox',
+  // Dashboards
+  Dashboards: 'Dashboards',
   // Settings
   Settings: 'Settings'
 };

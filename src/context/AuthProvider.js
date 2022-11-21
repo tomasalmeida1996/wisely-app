@@ -5,6 +5,8 @@ import AuthContext from './AuthContext';
 import { storeCurrency } from '../utils/currency';
 import { createMoneyBoxTable, deleteMoneyBoxTable } from '../dbHelpers/moneyboxHelper';
 import { createTransactionsTable, deleteTransactionsTable } from '../dbHelpers/transactionHelper';
+import { createImportedFilesTable } from '../dbHelpers/importFilesHelper';
+import { createTransactionQrCodesReadsTable } from '../dbHelpers/qrCodeHelper';
 
 function AuthProvider({children}) {
   const [state, dispatch] = React.useReducer(
@@ -65,6 +67,8 @@ function AuthProvider({children}) {
         // Create MoneyBox & Transactions Tables
         createMoneyBoxTable();
         createTransactionsTable();
+        createImportedFilesTable();
+        createTransactionQrCodesReadsTable();
         dispatch({type: 'SIGN_IN', user: jsonUser});
       },
       // Sign Out

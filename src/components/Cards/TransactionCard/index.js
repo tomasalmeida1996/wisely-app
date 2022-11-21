@@ -7,6 +7,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import { Colors, Typography } from '../../../styles';
+import { localeDate } from '../../../utils/dates';
 
 const TransactionCard = (props) => {
     const transaction = props.transaction;
@@ -15,16 +16,20 @@ const TransactionCard = (props) => {
     return (
         <View style={styles.container}>
             <View style={styles.iconContainer}>
-                <Icon name={transaction.icon} color={Colors.WHITE} size={15} />
+                {transaction.icon && <Icon name={transaction.icon} color={Colors.WHITE} size={15} />}
             </View>
 
             <View style={styles.detailsContainer}>
-                <Text style={[Typography.BODY, {color: Colors.WHITE}]}>{transaction.category}</Text>
-                <Text style={[Typography.TAGLINE, {color: Colors.GRAY_DARK}]}>{transaction.transaction_date}</Text>
+                {transaction.description ? (
+                    <Text style={[Typography.BODY, {color: Colors.WHITE}]}>{transaction.description || ''}</Text>
+                ) : (
+                    <Text style={[Typography.BODY, {color: Colors.WHITE}]}>{transaction.category || ''}</Text>
+                )}
+                <Text style={[Typography.TAGLINE, {color: Colors.GRAY_DARK}]}>{localeDate(transaction.transaction_date) || ''}</Text>
             </View>
 
             <Text style={[Typography.H4, transaction.type == 'income' ? {color: Colors.SUCESS} : {color: Colors.ALERT}]}>
-                {transaction.type == 'income' ? '+' : '-'}{currency} {transaction.amount}
+               {currency} {transaction.amount?.toFixed(2)}
             </Text>
         </View>
     );

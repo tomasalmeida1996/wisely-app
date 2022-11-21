@@ -34,7 +34,7 @@ const Income = ({navigation, route}) => {
 
     // Update Item
     const __update = (item) => {
-        navigation.navigate(routes.AddTransaction, {item: item});
+        navigation.navigate(routes.AddManualTransaction, {item: {operation: 'edit',...item}});
     }
 
     return (
